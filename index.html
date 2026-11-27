@@ -2,6 +2,9 @@
 <html lang="hi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Loan Seva</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#fff;--card:#fff;--ink:#000;--mut:#5c5c5c;--pri:#000;--onpri:#fff;--pri2:#efefef;--acc:#000;--line:#d6d6d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -35,7 +38,7 @@ a.lk{color:var(--ink);text-decoration:underline}
 </style></head><body><div id="app"></div>
 <script>
 const OWN={name:'Abhay Soni',phone:'6367577724',email:'loansevaproject@gmail.com',biz:'Loan Seva'};
-const VER='version 9';
+const VER='version 10';
 const CIBIL_LIVE=false; // partner CIBIL API chalu hone par true karein
 const API='https://rjjvvkxtjyjgyphbyclh.supabase.co/functions/v1/bright-endpoint';
 const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
@@ -53,7 +56,7 @@ inc:['Monthly income / salary (₹)','मासिक आय / सैलरी (
 amt:['Loan amount (₹)','लोन राशि (₹)'],ten:['Tenure (years)','अवधि (साल)'],emia:['EMI you can pay (₹ per month)','आप कितनी EMI दे सकते हैं (₹ प्रति माह)'],
 paddr:['Property address','प्रॉपर्टी का पता'],area:['Property area (sq. yard)','प्रॉपर्टी का क्षेत्रफल (वर्ग गज)'],est:['Approx. EMI at 11%','11% पर अनुमानित EMI'],
 aad:['Aadhaar number (12 digits)','आधार नंबर (12 अंक)'],pan:['PAN number','पैन नंबर'],i1:['Your photo','आपकी फोटो'],i2:['PAN card photo','पैन कार्ड की फोटो'],i3:['Aadhaar card front','आधार कार्ड (आगे)'],i5:['Aadhaar card back','आधार कार्ड (पीछे)'],i4:['Property papers photo (optional)','प्रॉपर्टी के कागज़ की फोटो (ज़रूरी नहीं)'],gal:['Gallery','गैलरी'],cam:['Camera','कैमरा'],
-cib:['CIBIL score','CIBIL स्कोर'],dob:['Date of birth','जन्म तिथि'],cl1:['Get free CIBIL report','मुफ़्त CIBIL रिपोर्ट निकालें'],cl2:['Get free CRIF report','मुफ़्त CRIF रिपोर्ट निकालें'],clh:['Tap a button, enter your details on the official site and verify with OTP. Download your free report, then come back here and add it. This is optional.','बटन दबाएं, आधिकारिक साइट पर अपनी जानकारी भरें और OTP से वेरिफाई करें। अपनी मुफ़्त रिपोर्ट डाउनलोड करके वापस यहाँ आएं और जोड़ें। ये ज़रूरी नहीं है।'],cs:['Your CIBIL score (300 to 900)','आपका CIBIL स्कोर (300 से 900)'],i6:['Credit report (PDF or photo, optional)','क्रेडिट रिपोर्ट (PDF या फोटो, ज़रूरी नहीं)'],pdf:['Choose file','फ़ाइल चुनें'],big:['File is too big (max 1 MB). Please add a smaller PDF or a photo.','फ़ाइल बहुत बड़ी है (अधिकतम 1 MB)। छोटी PDF या फोटो जोड़ें।'],badcs:['Score must be between 300 and 900','स्कोर 300 से 900 के बीच होना चाहिए'],unv:['told by customer, not verified','ग्राहक ने बताया, verified नहीं'],privacy:['Privacy Policy','गोपनीयता नीति'],terms:['Terms of Use','उपयोग की शर्तें'],agree:['By continuing, you accept our','आगे बढ़कर आप हमारी इन बातों से सहमत होते हैं:'],upd:['Last updated: November 2026','आख़िरी बदलाव: नवंबर 2026'],cibn:['PAN and date of birth are used only to fetch your CIBIL score.','PAN और जन्म तिथि सिर्फ़ CIBIL स्कोर निकालने के लिए इस्तेमाल होती है।'],getc:['Get my CIBIL score with OTP','OTP से मेरा CIBIL स्कोर निकालें'],cibo:['Enter the OTP sent to your mobile','आपके मोबाइल पर आया OTP डालें'],
+cib:['CIBIL score','CIBIL स्कोर'],dob:['Date of birth','जन्म तिथि'],cl1:['Get free CIBIL report','मुफ़्त CIBIL रिपोर्ट निकालें'],cl2:['Get free CRIF report','मुफ़्त CRIF रिपोर्ट निकालें'],clh:['Tap a button, enter your details on the official site and verify with OTP. Download your free report, then come back here and add it. This is optional.','बटन दबाएं, आधिकारिक साइट पर अपनी जानकारी भरें और OTP से वेरिफाई करें। अपनी मुफ़्त रिपोर्ट डाउनलोड करके वापस यहाँ आएं और जोड़ें। ये ज़रूरी नहीं है।'],cs:['Your CIBIL score (300 to 900)','आपका CIBIL स्कोर (300 से 900)'],i6:['Credit report (PDF or photo, optional)','क्रेडिट रिपोर्ट (PDF या फोटो, ज़रूरी नहीं)'],pdf:['Choose file','फ़ाइल चुनें'],big:['File is too big (max 1 MB). Please add a smaller PDF or a photo.','फ़ाइल बहुत बड़ी है (अधिकतम 1 MB)। छोटी PDF या फोटो जोड़ें।'],badcs:['Score must be between 300 and 900','स्कोर 300 से 900 के बीच होना चाहिए'],unv:['told by customer, not verified','ग्राहक ने बताया, verified नहीं'],privacy:['Privacy Policy','गोपनीयता नीति'],terms:['Terms of Use','उपयोग की शर्तें'],agree:['By continuing, you accept our','आगे बढ़कर आप हमारी इन बातों से सहमत होते हैं:'],upd:['Last updated: November 2026','आख़िरी बदलाव: नवंबर 2026'],inst:['Install app on your phone','फ़ोन में ऐप इंस्टॉल करें'],cibn:['PAN and date of birth are used only to fetch your CIBIL score.','PAN और जन्म तिथि सिर्फ़ CIBIL स्कोर निकालने के लिए इस्तेमाल होती है।'],getc:['Get my CIBIL score with OTP','OTP से मेरा CIBIL स्कोर निकालें'],cibo:['Enter the OTP sent to your mobile','आपके मोबाइल पर आया OTP डालें'],
 cons:['I agree to share my details and CIBIL report with the lender for loan processing.','मैं लोन प्रोसेसिंग के लिए अपनी जानकारी और CIBIL रिपोर्ट साझा करने की सहमति देता/देती हूँ।'],
 next:['Next','आगे'],sub:['Submit application','आवेदन जमा करें'],req:['Please fill all required fields','कृपया सभी ज़रूरी जानकारी भरें'],bad:['Please add your photo, PAN card and Aadhaar front and back','अपनी फोटो, पैन कार्ड और आधार के आगे-पीछे की फोटो जोड़ें'],cons2:['Please accept the consent','कृपया सहमति दें'],full:['Storage full, remove some photos','स्टोरेज भर गया है'],
 done:['Application submitted','आवेदन जमा हो गया'],donem:['Thank you! Our representative will contact you soon.','धन्यवाद! हमारे प्रतिनिधि जल्द ही आपसे संपर्क करेंगे।'],home:['Back to home','होम पर जाएं'],
@@ -155,7 +158,7 @@ admin:()=>chk()||VW.login(),
 home:()=>{const a=(MY||[])[0];return head('')+`<div class=hero><h1>${t('hi')}!</h1><div>${esc(nm())}</div></div>
 <button class=btn style="margin:0 0 12px" onclick=startApp()>${t('apply')}</button>
 ${a?`<div class=card><span class=muted>${t('latest')}</span><br><b>${LT[a.type][li()]} · ${fmt(a.amt)}</b> — ${ST[a.st][li()]}</div>`:''}
-<div class=grid style="margin-top:12px"><button class=tile onclick="goStat()"><big>📋</big>${t('mylo')}</button><button class=tile onclick="go('calc')"><big>🧮</big>${t('emi')}</button><button class=tile onclick="go('help')"><big>☎️</big>${t('help')}</button><a class=tile href="${wa()}" target=_blank><big>💬</big>${t('chat')}</a></div>
+<div class=grid style="margin-top:12px"><button class=tile onclick="goStat()"><big>📋</big>${t('mylo')}</button><button class=tile onclick="go('calc')"><big>🧮</big>${t('emi')}</button><button class=tile onclick="go('help')"><big>☎️</big>${t('help')}</button><a class=tile href="${wa()}" target=_blank><big>💬</big>${t('chat')}</a></div>${DIP?`<button class="btn alt" onclick=inst()>📲 ${t('inst')}</button>`:''}
 <div class=card style="margin-top:24px;padding:22px;text-align:center"><div style="font-size:28px">💡</div><div style="font-size:21px;font-weight:600;line-height:1.4;margin-top:6px">“${Q[qi][li()]}”</div></div>${legal()}`},
 form:()=>{const P=PROP.includes(+F.type),s=F.prof==='s';let h=head(t('s'+step),step>1?'step--;render()':"go('home')")+`<div class=steps>${[1,2,3].map(i=>`<i class="${i<=step?'on':''}"></i>`).join('')}</div>`;
  if(step===1)h+=`<label>${t('ltype')}<select onchange="F.type=this.value">${LT.map((x,i)=>`<option value=${i} ${F.type==i?'selected':''}>${x[li()]}</option>`).join('')}</select></label>
@@ -172,5 +175,10 @@ stat:()=>{const a=MY||[];return head(t('mylo'),"go('home')")+(MY===null?'<div cl
 calc:()=>head(t('emi'),"go('home')")+`<div class=card>${sl('a',t('amt'),100000,10000000,50000,2500000)}${sl('r',t('rate'),6,24,.1,10.5)}${sl('y',t('ten'),1,30,1,15)}</div><div class=hero style="margin-top:12px" id=res></div>`,
 help:()=>head(t('help'),"go('home')")+`<div class=card><div class=big style="font-size:24px">${OWN.name}</div><div class=muted>${OWN.biz}</div><p>${t('helpm')}</p><a class=btn href="tel:${OWN.phone}">📞 ${t('call')} ${OWN.phone}</a><a class="btn alt" href="mailto:${OWN.email}">✉️ ${t('mail')}</a></div>${legal()}`};
 function render(k){if(!k)window.scrollTo(0,0);if((V==='home'||V==='stat')&&MY===null&&TK)refreshMy();$('#app').innerHTML=VW[V]();if(V==='calc')calc2();if(V==='form')hint()}
+let DIP=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();DIP=e;if(V==='home')render(1)});
+addEventListener('appinstalled',()=>{DIP=null;if(V==='home')render(1)});
+function inst(){if(DIP){DIP.prompt();DIP=null;render(1)}}
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
 </script></body></html>
