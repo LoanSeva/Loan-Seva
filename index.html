@@ -38,7 +38,7 @@ a.lk{color:var(--ink);text-decoration:underline}
 </style></head><body><div id="app"></div>
 <script>
 const OWN={name:'Abhay Soni',phone:'6367577724',email:'loansevaproject@gmail.com',biz:'Loan Seva'};
-const VER='version 12';
+const VER='version 13';
 const CIBIL_LIVE=false; // partner CIBIL API chalu hone par true karein
 const API='https://rjjvvkxtjyjgyphbyclh.supabase.co/functions/v1/bright-endpoint';
 const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
@@ -151,7 +151,7 @@ function chk(){if(!A)return'';const a=LEADS||[];
  ${kv(t('amt'),fmt(x.amt))}${kv(t('ten'),x.ten)}${kv(t('emia'),fmt(x.emi))}${p?kv(t('paddr'),x.paddr)+kv(t('area'),x.area):''}${kv(t('cib'),x.cibil||'-')}${kv(t('cs'),x.cs?x.cs+' ('+t('unv')+')':'-')}</div>
  <div>${['i1','i2','i3','i5','i4','i6'].filter(k=>x.img&&x.img[k]).map(k=>th(x.img[k])).join('')}</div></details>`}).join(''):`<div class=card>${t('none')}</div>`)+`<button class="btn alt" onclick="A=false;AT='';LEADS=null;go('login')">${t('logout')}</button>`}
 const VW={
-login:()=>head('')+`<div class=hero><h1>${t('title')}</h1><div>${t('tag')}</div></div><label>${t('mob')}<input id=m type=tel maxlength=10 inputmode=numeric placeholder="98XXXXXXXX"></label><button class=btn onclick=sendOtp()>${t('getotp')}</button><p class=muted>${t('demo')}</p><button class="btn alt" onclick="go('alogin')">${t('owner')}</button><p class=muted style="text-align:center;margin-top:16px">${t('agree')}</p>${legal()}<p class=muted style="text-align:center;margin-top:24px">${VER}</p>`,
+login:()=>head('')+`<div class=hero><h1>${t('title')}</h1><div>${t('tag')}</div></div><label>${t('mob')}<input id=m type=tel maxlength=10 inputmode=numeric placeholder="98XXXXXXXX"></label><button class=btn onclick=sendOtp()>${t('getotp')}</button><p class=muted>${t('demo')}</p><p class=muted style="text-align:center;margin-top:16px">${t('agree')}</p>${legal()}<p class=muted style="text-align:center;margin-top:24px">${VER}</p>`,
 otp:()=>head(t('otp'),"go('login')")+`<p class=muted>+91 ${M}</p><label><input id=o type=tel maxlength=6 inputmode=numeric></label><button class=btn onclick=verify()>${t('verify')}</button><p class=muted>${t('demo')}</p>`,
 lang:()=>`<div class=hero style="margin-top:24px"><h1>${T.title[0]} · ${T.title[1]}</h1><div>Choose your language · अपनी भाषा चुनें</div></div><button class=btn onclick="setLang('hi')">हिन्दी</button><button class="btn alt" onclick="setLang('en')">English</button><p class=muted style="text-align:center;margin-top:24px">${VER}</p>`,
 doc:()=>{const i=li(),f=x=>x.replace(/\{B\}/g,OWN.biz).replace(/\{N\}/g,OWN.name).replace(/\{E\}/g,OWN.email).replace(/\{P\}/g,OWN.phone);return head(t(LG),"go(PV)")+`<p class=muted>${t('upd')}</p>`+DOC[LG].map(x=>`<div class=card><b>${x[i]}</b><p style="margin:6px 0 0">${f(x[i+2])}</p></div>`).join('')+`<button class=btn onclick="go(PV)">←</button>`},
