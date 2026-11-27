@@ -34,6 +34,7 @@ summary{cursor:pointer}.big{font-size:34px;font-weight:700}
 </style></head><body><div id="app"></div>
 <script>
 const OWN={name:'Abhay Soni',phone:'6367577724',email:'loansevaproject@gmail.com',biz:'Loan Seva'};
+const CIBIL_LIVE=false; // partner CIBIL API chalu hone par true karein
 const API='https://rjjvvkxtjyjgyphbyclh.supabase.co/functions/v1/bright-endpoint';
 const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast(t('full'))}};
@@ -50,7 +51,7 @@ inc:['Monthly income / salary (₹)','मासिक आय / सैलरी (
 amt:['Loan amount (₹)','लोन राशि (₹)'],ten:['Tenure (years)','अवधि (साल)'],emia:['EMI you can pay (₹ per month)','आप कितनी EMI दे सकते हैं (₹ प्रति माह)'],
 paddr:['Property address','प्रॉपर्टी का पता'],area:['Property area (sq. yard)','प्रॉपर्टी का क्षेत्रफल (वर्ग गज)'],est:['Approx. EMI at 11%','11% पर अनुमानित EMI'],
 aad:['Aadhaar number (12 digits)','आधार नंबर (12 अंक)'],pan:['PAN number','पैन नंबर'],i1:['Your photo','आपकी फोटो'],i2:['PAN card photo','पैन कार्ड की फोटो'],i3:['Aadhaar card front','आधार कार्ड (आगे)'],i5:['Aadhaar card back','आधार कार्ड (पीछे)'],i4:['Property papers photo (optional)','प्रॉपर्टी के कागज़ की फोटो (ज़रूरी नहीं)'],gal:['Gallery','गैलरी'],cam:['Camera','कैमरा'],
-cib:['CIBIL score','CIBIL स्कोर'],dob:['Date of birth','जन्म तिथि'],cibn:['PAN and date of birth are used only to fetch your CIBIL score.','PAN और जन्म तिथि सिर्फ़ CIBIL स्कोर निकालने के लिए इस्तेमाल होती है।'],getc:['Get my CIBIL score with OTP','OTP से मेरा CIBIL स्कोर निकालें'],cibo:['Enter the OTP sent to your mobile','आपके मोबाइल पर आया OTP डालें'],
+cib:['CIBIL score','CIBIL स्कोर'],dob:['Date of birth','जन्म तिथि'],cl1:['Get free CIBIL report','मुफ़्त CIBIL रिपोर्ट निकालें'],cl2:['Get free CRIF report','मुफ़्त CRIF रिपोर्ट निकालें'],clh:['Tap a button, enter your details on the official site and verify with OTP. Download your free report, then come back here and add it. This is optional.','बटन दबाएं, आधिकारिक साइट पर अपनी जानकारी भरें और OTP से वेरिफाई करें। अपनी मुफ़्त रिपोर्ट डाउनलोड करके वापस यहाँ आएं और जोड़ें। ये ज़रूरी नहीं है।'],cs:['Your CIBIL score (300 to 900)','आपका CIBIL स्कोर (300 से 900)'],i6:['Credit report (PDF or photo, optional)','क्रेडिट रिपोर्ट (PDF या फोटो, ज़रूरी नहीं)'],pdf:['Choose file','फ़ाइल चुनें'],big:['File is too big (max 1 MB). Please add a smaller PDF or a photo.','फ़ाइल बहुत बड़ी है (अधिकतम 1 MB)। छोटी PDF या फोटो जोड़ें।'],badcs:['Score must be between 300 and 900','स्कोर 300 से 900 के बीच होना चाहिए'],unv:['told by customer, not verified','ग्राहक ने बताया, verified नहीं'],cibn:['PAN and date of birth are used only to fetch your CIBIL score.','PAN और जन्म तिथि सिर्फ़ CIBIL स्कोर निकालने के लिए इस्तेमाल होती है।'],getc:['Get my CIBIL score with OTP','OTP से मेरा CIBIL स्कोर निकालें'],cibo:['Enter the OTP sent to your mobile','आपके मोबाइल पर आया OTP डालें'],
 cons:['I agree to share my details and CIBIL report with the lender for loan processing.','मैं लोन प्रोसेसिंग के लिए अपनी जानकारी और CIBIL रिपोर्ट साझा करने की सहमति देता/देती हूँ।'],
 next:['Next','आगे'],sub:['Submit application','आवेदन जमा करें'],req:['Please fill all required fields','कृपया सभी ज़रूरी जानकारी भरें'],bad:['Please add your photo, PAN card and Aadhaar front and back','अपनी फोटो, पैन कार्ड और आधार के आगे-पीछे की फोटो जोड़ें'],cons2:['Please accept the consent','कृपया सहमति दें'],full:['Storage full, remove some photos','स्टोरेज भर गया है'],
 done:['Application submitted','आवेदन जमा हो गया'],donem:['Thank you! Our representative will contact you soon.','धन्यवाद! हमारे प्रतिनिधि जल्द ही आपसे संपर्क करेंगे।'],home:['Back to home','होम पर जाएं'],
@@ -85,6 +86,9 @@ function startApp(){F={type:'0',prof:'s',img:{},name:nm()};step=1;cibS=0;go('for
 function inp(k,l,ty,ex){return `<label>${l}<input type=${ty||'text'} ${ex||''} value="${esc(F[k])}" oninput="F['${k}']=this.value;hint()"></label>`}
 function ta(k,l){return `<label>${l}<textarea rows=2 oninput="F['${k}']=this.value">${esc(F[k])}</textarea></label>`}
 function up(k){return `<label>${t(k)}</label><div class=ub><label for=g_${k}>📁 ${t('gal')}</label><input type=file id=g_${k} accept="image/*" onchange="pick(this,'${k}')"><label for=c_${k}>📷 ${t('cam')}</label><input type=file id=c_${k} accept="image/*" capture=${k==='i1'?'user':'environment'} onchange="pick(this,'${k}')"></div><div id="p_${k}">${F.img[k]?`<img class=th src="${F.img[k]}">`:''}</div>`}
+function upf(k){return `<label>${t(k)}</label><div class=ub><label for=f_${k}>📄 ${t('pdf')}</label><input type=file id=f_${k} accept="application/pdf,image/*" onchange="pickDoc(this,'${k}')"></div><div id="p_${k}">${F.img[k]?(F.img[k].startsWith('data:application/pdf')?'✓ PDF':`<img class=th src="${F.img[k]}">`):''}</div>`}
+function pickDoc(el,k){const f=el.files[0];if(!f)return;if(f.type==='application/pdf'){if(f.size>1.1e6){el.value='';return toast(t('big'))}const r=new FileReader();r.onload=()=>{F.img[k]=r.result;$('#p_'+k).textContent='✓ '+f.name};r.readAsDataURL(f)}else pick(el,k)}
+function th(u){return /\.pdf(\?|$)/i.test(u)?`<a class="btn alt" href="${u}" target=_blank>📄 PDF</a>`:`<img class=th src="${u}" onclick="showImg(this.src)">`}
 function pick(el,k){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),z=Math.min(1,640/Math.max(im.width,im.height));c.width=im.width*z;c.height=im.height*z;c.getContext('2d').drawImage(im,0,0,c.width,c.height);F.img[k]=c.toDataURL('image/jpeg',.55);$('#p_'+k).innerHTML=`<img class=th src="${F.img[k]}">`};im.onerror=()=>toast('⚠️');im.src=r.result};r.readAsDataURL(f);el.value=''}
 function emiOf(P,R,Y){const r=R/1200,n=Y*12;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
 function hint(){const h=$('#hint');if(h)h.textContent=(+F.amt&&+F.ten)?t('est')+': '+fmt(emiOf(+F.amt,11,+F.ten)):''}
@@ -97,6 +101,7 @@ async function cibOk(){const r=await api('cibil_verify',{otp:$('#c1').value.trim
 async function submit(){
  if(!F.img.i1||!F.img.i2||!F.img.i3||!F.img.i5)return toast(t('bad'));
  if(!F.cn)return toast(t('cons2'));
+ if(F.cs&&(+F.cs<300||+F.cs>900))return toast(t('badcs'));
  if(window.busy)return;window.busy=1;
  const {cibil,pan,dob,cn,...p}=F;
  const r=await api('submit',p);window.busy=0;
@@ -112,8 +117,8 @@ function chk(){if(!A)return'';const a=LEADS||[];
  <a class=btn href="tel:${x.mob}">📞 ${t('call')} ${x.mob}</a><a class="btn alt" href="https://wa.me/91${x.mob}" target=_blank>💬 WhatsApp</a><a class="btn alt" href="mailto:${esc(x.email)}">✉️ ${esc(x.email)}</a>
  <label>${t('stat')}<select onchange="setSt('${x.id}',this.value)">${ST.map((z,i)=>`<option value=${i} ${i==x.st?'selected':''}>${z[li()]}</option>`).join('')}</select></label>
  <div style="margin-top:10px">${kv('ID',x.ref)}${kv(t('ap'),new Date(x.at).toLocaleDateString('en-IN'))}${kv(t('prof'),t(s?'sal':'self'))}${kv(t(s?'co1':'co2'),x.co)}${kv(t(s?'nat1':'nat2'),x.nat||'-')}${kv(t('inc'),fmt(x.inc))}${kv(t('haddr'),x.haddr)}${kv(t('baddr'),x.baddr||'-')}
- ${kv(t('amt'),fmt(x.amt))}${kv(t('ten'),x.ten)}${kv(t('emia'),fmt(x.emi))}${p?kv(t('paddr'),x.paddr)+kv(t('area'),x.area):''}${kv(t('cib'),x.cibil||'-')}</div>
- <div>${['i1','i2','i3','i5','i4'].filter(k=>x.img&&x.img[k]).map(k=>`<img class=th src="${x.img[k]}" onclick="showImg(this.src)">`).join('')}</div></details>`}).join(''):`<div class=card>${t('none')}</div>`)}
+ ${kv(t('amt'),fmt(x.amt))}${kv(t('ten'),x.ten)}${kv(t('emia'),fmt(x.emi))}${p?kv(t('paddr'),x.paddr)+kv(t('area'),x.area):''}${kv(t('cib'),x.cibil||'-')}${kv(t('cs'),x.cs?x.cs+' ('+t('unv')+')':'-')}</div>
+ <div>${['i1','i2','i3','i5','i4','i6'].filter(k=>x.img&&x.img[k]).map(k=>th(x.img[k])).join('')}</div></details>`}).join(''):`<div class=card>${t('none')}</div>`)}
 const VW={
 login:()=>head('')+`<div class=hero><h1>${t('title')}</h1><div>${t('tag')}</div></div><label>${t('mob')}<input id=m type=tel maxlength=10 inputmode=numeric placeholder="98XXXXXXXX"></label><button class=btn onclick=sendOtp()>${t('getotp')}</button><p class=muted>${t('demo')}</p><button class="btn alt" onclick="go('alogin')">${t('owner')}</button>`,
 otp:()=>head(t('otp'),"go('login')")+`<p class=muted>+91 ${M}</p><label><input id=o type=tel maxlength=6 inputmode=numeric></label><button class=btn onclick=verify()>${t('verify')}</button><p class=muted>${t('demo')}</p>`,
@@ -133,13 +138,13 @@ form:()=>{const P=PROP.includes(+F.type),s=F.prof==='s';let h=head(t('s'+step),s
  if(step===2)h+=`${inp('amt',t('amt'),'number','inputmode=numeric')}${inp('ten',t('ten'),'number','inputmode=numeric')}${inp('emi',t('emia'),'number','inputmode=numeric')}${P?ta('paddr',t('paddr'))+inp('area',t('area'),'number','inputmode=decimal'):''}`;
  if(step===3)h+=`${up('i1')}${up('i2')}${up('i3')}${up('i5')}${P?up('i4'):''}
  <label style="display:flex"><input type=checkbox id=cn ${F.cn?'checked':''} onchange="F.cn=this.checked">${t('cons')}</label>
- <div class=card><b>${t('cib')}</b>${cibS===0?`<p class=muted>${t('cibn')}</p>${inp('pan',t('pan'),'text','maxlength=10 style="text-transform:uppercase"')}${inp('dob',t('dob'),'date')}<button class="btn alt" onclick=cibGo()>${t('getc')}</button>`:cibS===1?`<p class=muted>${t('cibo')}</p><input id=c1 type=tel maxlength=6 inputmode=numeric><button class=btn onclick=cibOk()>${t('verify')}</button>`:`<div class=sc>${F.cibil}</div>`}</div>
+ <div class=card><b>${t('cib')}</b>${CIBIL_LIVE?(cibS===0?`<p class=muted>${t('cibn')}</p>${inp('pan',t('pan'),'text','maxlength=10 style="text-transform:uppercase"')}${inp('dob',t('dob'),'date')}<button class="btn alt" onclick=cibGo()>${t('getc')}</button>`:cibS===1?`<p class=muted>${t('cibo')}</p><input id=c1 type=tel maxlength=6 inputmode=numeric><button class=btn onclick=cibOk()>${t('verify')}</button>`:`<div class=sc>${F.cibil}</div>`):`<p class=muted>${t('clh')}</p><a class="btn alt" href="https://cibil.com/freecibilscore" target=_blank rel=noopener>${t('cl1')}</a><a class="btn alt" href="https://cir.crifhighmark.com/free-credit-report/freeflow" target=_blank rel=noopener>${t('cl2')}</a>${inp('cs',t('cs'),'number','inputmode=numeric min=300 max=900')}${upf('i6')}`}</div>
  <button class=btn onclick=submit()>${t('sub')}</button>`;
  if(step<3)h+=`<button class=btn onclick=nxt()>${t('next')}</button>`;return h},
 done:()=>`<div class=hero style="margin-top:30px"><h1>✓ ${t('done')}</h1><div>${t('donem')}</div></div><button class=btn onclick="goStat()">${t('mylo')}</button><button class="btn alt" onclick="go('home')">${t('home')}</button>`,
 stat:()=>{const a=MY||[];return head(t('mylo'),"go('home')")+(MY===null?'<div class=card>…</div>':a.length?a.map(x=>`<div class=card><b>${LT[x.type][li()]} · ${fmt(x.amt)}</b><div class=muted>${x.ref} · ${new Date(x.at).toLocaleDateString('en-IN')}</div>${x.st>4?`<p><b>${ST[5][li()]}</b></p>`:`<ul class=tl>${ST.slice(0,5).map((z,i)=>`<li class="${i<=x.st?'d':''}">${z[li()]}</li>`).join('')}</ul>`}</div>`).join(''):`<div class=card>${t('noapp')}</div><button class=btn onclick=startApp()>${t('apply')}</button>`)},
 calc:()=>head(t('emi'),"go('home')")+`<div class=card>${sl('a',t('amt'),100000,10000000,50000,2500000)}${sl('r',t('rate'),6,24,.1,10.5)}${sl('y',t('ten'),1,30,1,15)}</div><div class=hero style="margin-top:12px" id=res></div>`,
-help:()=>head(t('help'),"go('home')")+`<div class=card><div class=big style="font-size:24px">${OWN.name}</div><div class=muted>${OWN.biz}</div><p>${t('helpm')}</p><a class=btn href="tel:${OWN.phone}">📞 ${t('call')} ${OWN.phone}</a><a class="btn alt" href="${wa()}" target=_blank>💬 ${t('chat')}</a><a class="btn alt" href="mailto:${OWN.email}">✉️ ${t('mail')}</a></div>`};
+help:()=>head(t('help'),"go('home')")+`<div class=card><div class=big style="font-size:24px">${OWN.name}</div><div class=muted>${OWN.biz}</div><p>${t('helpm')}</p><a class=btn href="tel:${OWN.phone}">📞 ${t('call')} ${OWN.phone}</a><a class="btn alt" href="mailto:${OWN.email}">✉️ ${t('mail')}</a></div>`};
 function render(k){if(!k)window.scrollTo(0,0);if((V==='home'||V==='stat')&&MY===null&&TK)refreshMy();$('#app').innerHTML=VW[V]();if(V==='calc')calc2();if(V==='form')hint()}
 render();
 </script></body></html>
