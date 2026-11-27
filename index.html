@@ -34,6 +34,7 @@ summary{cursor:pointer}.big{font-size:34px;font-weight:700}
 </style></head><body><div id="app"></div>
 <script>
 const OWN={name:'Abhay Soni',phone:'6367577724',email:'loansevaproject@gmail.com',biz:'Loan Seva'};
+const VER='version 8';
 const CIBIL_LIVE=false; // partner CIBIL API chalu hone par true karein
 const API='https://rjjvvkxtjyjgyphbyclh.supabase.co/functions/v1/bright-endpoint';
 const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
@@ -64,7 +65,7 @@ const ST=[['Received','प्राप्त हुआ'],['In review','जाँ
 const PROP=[0,1,4,5];
 const Q=[['A small EMI today builds a big dream tomorrow.','आज की छोटी EMI, कल का बड़ा सपना।'],['The right loan is not the biggest one, it is the one you can repay comfortably.','सही लोन वही है जिसे आप आराम से चुका सकें, सबसे बड़ा लोन नहीं।'],['Pay your EMI on time and your CIBIL score will thank you.','EMI समय पर भरें, आपका CIBIL स्कोर खुद बढ़ेगा।'],['Your own home starts with a single application.','अपना घर एक आवेदन से शुरू होता है।'],['Borrow with a plan, repay with confidence.','योजना से लोन लें, भरोसे से चुकाएं।']];
 const qi=Math.floor(Math.random()*Q.length);
-let L=ls('lang','hi'),M=ls('user',''),V=M&&ls('tk','')?(nm()?'home':'nm'):'login',F={},step=1,cibS=0,A=false,TK=ls('tk',''),AT='',LEADS=null,MY=null;
+let L=ls('lang','')||'hi',M=ls('user',''),V=!ls('lang','')?'lang':(M&&ls('tk','')?(nm()?'home':'nm'):'login'),F={},step=1,cibS=0,A=false,TK=ls('tk',''),AT='',LEADS=null,MY=null;
 const $=s=>document.querySelector(s),li=()=>L==='hi'?1:0,t=k=>T[k]?T[k][li()]:k;
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>'₹'+Math.round(+n||0).toLocaleString('en-IN');
@@ -78,8 +79,8 @@ async function refreshMy(){const r=await api('my_leads');if(r){MY=r.leads;if(V==
 function goStat(){MY=null;go('stat')}
 async function adminLogin(){const r=await api('admin_login',{password:$('#pn').value});if(!r)return;AT=r.token;A=true;LEADS=null;go('admin');const x=await api('admin_leads');if(x){LEADS=x.leads;render(1)}}
 async function sendOtp(){const m=$('#m').value.trim();if(!/^[6-9]\d{9}$/.test(m))return toast(t('badm'));M=m;const r=await api('send_otp',{mobile:m});if(r)go('otp')}
-async function verify(){const r=await api('verify_otp',{mobile:M,code:$('#o').value.trim()});if(!r)return;TK=r.token;sv('tk',TK);sv('user',M);MY=null;go('lang')}
-function setLang(l){L=l;sv('lang',l);document.documentElement.lang=l;go(nm()?'home':'nm')}
+async function verify(){const r=await api('verify_otp',{mobile:M,code:$('#o').value.trim()});if(!r)return;TK=r.token;sv('tk',TK);sv('user',M);MY=null;go(nm()?'home':'nm')}
+function setLang(l){L=l;sv('lang',l);document.documentElement.lang=l;go(M&&TK?(nm()?'home':'nm'):'login')}
 function nm(){return ls('names',{})[M]||''}
 function saveName(){const n=$('#nn').value.trim();if(n.length<2)return toast(t('req'));const o=ls('names',{});o[M]=n;sv('names',o);go('home')}
 function startApp(){F={type:'0',prof:'s',img:{},name:nm()};step=1;cibS=0;go('form')}
@@ -120,9 +121,9 @@ function chk(){if(!A)return'';const a=LEADS||[];
  ${kv(t('amt'),fmt(x.amt))}${kv(t('ten'),x.ten)}${kv(t('emia'),fmt(x.emi))}${p?kv(t('paddr'),x.paddr)+kv(t('area'),x.area):''}${kv(t('cib'),x.cibil||'-')}${kv(t('cs'),x.cs?x.cs+' ('+t('unv')+')':'-')}</div>
  <div>${['i1','i2','i3','i5','i4','i6'].filter(k=>x.img&&x.img[k]).map(k=>th(x.img[k])).join('')}</div></details>`}).join(''):`<div class=card>${t('none')}</div>`)}
 const VW={
-login:()=>head('')+`<div class=hero><h1>${t('title')}</h1><div>${t('tag')}</div></div><label>${t('mob')}<input id=m type=tel maxlength=10 inputmode=numeric placeholder="98XXXXXXXX"></label><button class=btn onclick=sendOtp()>${t('getotp')}</button><p class=muted>${t('demo')}</p><button class="btn alt" onclick="go('alogin')">${t('owner')}</button>`,
+login:()=>head('')+`<div class=hero><h1>${t('title')}</h1><div>${t('tag')}</div></div><label>${t('mob')}<input id=m type=tel maxlength=10 inputmode=numeric placeholder="98XXXXXXXX"></label><button class=btn onclick=sendOtp()>${t('getotp')}</button><p class=muted>${t('demo')}</p><button class="btn alt" onclick="go('alogin')">${t('owner')}</button><p class=muted style="text-align:center;margin-top:24px">${VER}</p>`,
 otp:()=>head(t('otp'),"go('login')")+`<p class=muted>+91 ${M}</p><label><input id=o type=tel maxlength=6 inputmode=numeric></label><button class=btn onclick=verify()>${t('verify')}</button><p class=muted>${t('demo')}</p>`,
-lang:()=>`<div class=top><b>${t('chl')}</b></div><button class=btn onclick="setLang('hi')">हिन्दी</button><button class="btn alt" onclick="setLang('en')">English</button>`,
+lang:()=>`<div class=hero style="margin-top:24px"><h1>${T.title[0]} · ${T.title[1]}</h1><div>Choose your language · अपनी भाषा चुनें</div></div><button class=btn onclick="setLang('hi')">हिन्दी</button><button class="btn alt" onclick="setLang('en')">English</button><p class=muted style="text-align:center;margin-top:24px">${VER}</p>`,
 nm:()=>head('')+`<div class=hero><h1>${t('hi')}!</h1></div><label>${t('name')}<input id=nn type=text></label><button class=btn onclick=saveName()>${t('next')}</button>`,
 alogin:()=>head(t('owner'),"go('login')")+`<label>${t('pin')}<input id=pn type=password></label><button class=btn onclick=adminLogin()>${t('verify')}</button>`,
 admin:()=>chk()||VW.login(),
@@ -138,13 +139,13 @@ form:()=>{const P=PROP.includes(+F.type),s=F.prof==='s';let h=head(t('s'+step),s
  if(step===2)h+=`${inp('amt',t('amt'),'number','inputmode=numeric')}${inp('ten',t('ten'),'number','inputmode=numeric')}${inp('emi',t('emia'),'number','inputmode=numeric')}${P?ta('paddr',t('paddr'))+inp('area',t('area'),'number','inputmode=decimal'):''}`;
  if(step===3)h+=`${up('i1')}${up('i2')}${up('i3')}${up('i5')}${P?up('i4'):''}
  <label style="display:flex"><input type=checkbox id=cn ${F.cn?'checked':''} onchange="F.cn=this.checked">${t('cons')}</label>
- <div class=card><b>${t('cib')}</b>${CIBIL_LIVE?(cibS===0?`<p class=muted>${t('cibn')}</p>${inp('pan',t('pan'),'text','maxlength=10 style="text-transform:uppercase"')}${inp('dob',t('dob'),'date')}<button class="btn alt" onclick=cibGo()>${t('getc')}</button>`:cibS===1?`<p class=muted>${t('cibo')}</p><input id=c1 type=tel maxlength=6 inputmode=numeric><button class=btn onclick=cibOk()>${t('verify')}</button>`:`<div class=sc>${F.cibil}</div>`):`<p class=muted>${t('clh')}</p><a class="btn alt" href="https://cibil.com/freecibilscore" target=_blank rel=noopener>${t('cl1')}</a><a class="btn alt" href="https://www.crifhighmark.com/your-credit-score" target=_blank rel=noopener>${t('cl2')}</a>${inp('cs',t('cs'),'number','inputmode=numeric min=300 max=900')}${upf('i6')}`}</div>
+ <div class=card><b>${t('cib')}</b>${CIBIL_LIVE?(cibS===0?`<p class=muted>${t('cibn')}</p>${inp('pan',t('pan'),'text','maxlength=10 style="text-transform:uppercase"')}${inp('dob',t('dob'),'date')}<button class="btn alt" onclick=cibGo()>${t('getc')}</button>`:cibS===1?`<p class=muted>${t('cibo')}</p><input id=c1 type=tel maxlength=6 inputmode=numeric><button class=btn onclick=cibOk()>${t('verify')}</button>`:`<div class=sc>${F.cibil}</div>`):`<p class=muted>${t('clh')}</p><a class="btn alt" href="https://cibil.com/freecibilscore" target=_blank rel=noopener>${t('cl1')}</a><a class="btn alt" href="https://cir.crifhighmark.com/free-credit-report/freeflow" target=_blank rel=noopener>${t('cl2')}</a>${inp('cs',t('cs'),'number','inputmode=numeric min=300 max=900')}${upf('i6')}`}</div>
  <button class=btn onclick=submit()>${t('sub')}</button>`;
  if(step<3)h+=`<button class=btn onclick=nxt()>${t('next')}</button>`;return h},
 done:()=>`<div class=hero style="margin-top:30px"><h1>✓ ${t('done')}</h1><div>${t('donem')}</div></div><button class=btn onclick="goStat()">${t('mylo')}</button><button class="btn alt" onclick="go('home')">${t('home')}</button>`,
 stat:()=>{const a=MY||[];return head(t('mylo'),"go('home')")+(MY===null?'<div class=card>…</div>':a.length?a.map(x=>`<div class=card><b>${LT[x.type][li()]} · ${fmt(x.amt)}</b><div class=muted>${x.ref} · ${new Date(x.at).toLocaleDateString('en-IN')}</div>${x.st>4?`<p><b>${ST[5][li()]}</b></p>`:`<ul class=tl>${ST.slice(0,5).map((z,i)=>`<li class="${i<=x.st?'d':''}">${z[li()]}</li>`).join('')}</ul>`}</div>`).join(''):`<div class=card>${t('noapp')}</div><button class=btn onclick=startApp()>${t('apply')}</button>`)},
 calc:()=>head(t('emi'),"go('home')")+`<div class=card>${sl('a',t('amt'),100000,10000000,50000,2500000)}${sl('r',t('rate'),6,24,.1,10.5)}${sl('y',t('ten'),1,30,1,15)}</div><div class=hero style="margin-top:12px" id=res></div>`,
-help:()=>head(t('help'),"go('home')")+`<div class=card><div class=big style="font-size:24px">${OWN.name}</div><div class=muted>${OWN.biz}</div><p>${t('helpm')}</p><a class=btn href="tel:${OWN.phone}">📞 ${t('call')} ${OWN.phone}</a><a class="btn alt" href="${wa()}" target=_blank>💬 ${t('chat')}</a><a class="btn alt" href="mailto:${OWN.email}">✉️ ${t('mail')}</a></div>`};
+help:()=>head(t('help'),"go('home')")+`<div class=card><div class=big style="font-size:24px">${OWN.name}</div><div class=muted>${OWN.biz}</div><p>${t('helpm')}</p><a class=btn href="tel:${OWN.phone}">📞 ${t('call')} ${OWN.phone}</a><a class="btn alt" href="mailto:${OWN.email}">✉️ ${t('mail')}</a></div>`};
 function render(k){if(!k)window.scrollTo(0,0);if((V==='home'||V==='stat')&&MY===null&&TK)refreshMy();$('#app').innerHTML=VW[V]();if(V==='calc')calc2();if(V==='form')hint()}
 render();
 </script></body></html>
